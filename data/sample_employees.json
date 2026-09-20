@@ -1,0 +1,62 @@
+[
+  {
+    "employee_id": "E1001",
+    "name": "张伟",
+    "department": "研发中心",
+    "title": "高级算法工程师",
+    "tenure_years": 6.5,
+    "performance_rating": "A",
+    "overtime_hours_per_month": 30,
+    "months_since_promotion": 12,
+    "skills": ["Python", "自然语言处理", "深度学习"],
+    "resume_text": "负责自然语言处理方向研发，主导金融日志解析平台建设，熟悉 Python、深度学习与大数据处理。"
+  },
+  {
+    "employee_id": "E1002",
+    "name": "李娜",
+    "department": "人力资源部",
+    "title": "招聘专员",
+    "tenure_years": 0.8,
+    "performance_rating": "B",
+    "overtime_hours_per_month": 55,
+    "months_since_promotion": 8,
+    "skills": ["招聘"],
+    "resume_text": "负责技术岗位招聘，跟进招聘全流程，熟悉招聘渠道运营与候选人沟通。"
+  },
+  {
+    "employee_id": "E1003",
+    "name": "王强",
+    "department": "研发中心",
+    "title": "数据仓库工程师",
+    "tenure_years": 4.2,
+    "performance_rating": "C",
+    "overtime_hours_per_month": 60,
+    "months_since_promotion": 30,
+    "skills": ["SQL", "数据仓库"],
+    "resume_text": "负责数据仓库建模与 ETL 开发，熟悉 SQL 与离线数仓体系。"
+  },
+  {
+    "employee_id": "E1004",
+    "name": "赵敏",
+    "department": "风控部",
+    "title": "风控专家",
+    "tenure_years": 8.0,
+    "performance_rating": "S",
+    "overtime_hours_per_month": 20,
+    "months_since_promotion": 6,
+    "skills": ["风控", "机器学习"],
+    "resume_text": "主导信贷风控模型体系建设，熟悉机器学习建模与风控策略。"
+  },
+  {
+    "employee_id": "E1005",
+    "name": "陈杰",
+    "department": "研发中心",
+    "title": "初级开发工程师",
+    "tenure_years": 0.5,
+    "performance_rating": "B",
+    "overtime_hours_per_month": 40,
+    "months_since_promotion": 3,
+    "skills": [],
+    "resume_text": "负责后端接口开发，正在学习 Java 与微服务架构。"
+  }
+]
