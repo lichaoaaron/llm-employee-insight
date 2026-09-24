@@ -140,6 +140,30 @@ def cmd_dashboard(args, config) -> None:
     print("梯队分布：", report.demographics.get("rating_distribution", {}))
 
 
+def cmd_export(args, config) -> None:
+    """把离职风险结果导出为文件。"""
+    employees = _load_data(args.data)
+    risk_service = TurnoverRiskService(config)
+    rows = [r.to_dict() for r in risk_service.evaluate(employees)]
+    report = ReportService()
+
+    if args.format == "csv":
+        content = report.to_csv(rows)
+    elif args.format == "markdown":
+        content = report.to_markdown_table(rows)
+    elif args.format == "html":
+        content = report.to_html_page("离职风险报告", [{"heading": "风险排行", "rows": rows}])
+    else:
+        content = json.dumps(rows, ensure_ascii=False, indent=2)
+
+    output = args.output
+    if not output:
+        print("请通过 --output 指定输出文件路径", file=sys.stderr)
+        sys.exit(1)
+    Path(output).write_text(content, encoding="utf-8")
+    print(f"已导出到 {output}")
+
+
 def main(argv: List[str] | None = None) -> None:
     config = load_config()
     parser = argparse.ArgumentParser(prog="employee-insight", description="员工信息智能分析与管理系统")
@@ -168,6 +192,11 @@ def main(argv: List[str] | None = None) -> None:
     report.set_defaults(func=cmd_report)
 
     sub.add_parser("dashboard", help="综合仪表盘").set_defaults(func=cmd_dashboard)
+
+    export = sub.add_parser("export", help="导出报告到文件")
+    export.add_argument("--format", choices=["json", "csv", "markdown", "html"], default="csv")
+    export.add_argument("--output", required=True, help="输出文件路径")
+    export.set_defaults(func=cmd_export)
 
     args = parser.parse_args(argv)
     args.func(args, config)
