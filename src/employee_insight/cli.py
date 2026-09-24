@@ -20,6 +20,7 @@ from employee_insight.config import load_config
 from employee_insight.data_loader import load_employees
 from employee_insight.models.employee import Employee
 from employee_insight.services.llm_client import MockLLMClient, OpenAICompatibleClient
+from employee_insight.services.analysis_engine import AnalysisEngine
 from employee_insight.services.org_analysis import OrgAnalysisService
 from employee_insight.services.profile_service import ProfileService
 from employee_insight.services.report_service import ReportService
@@ -114,6 +115,31 @@ def cmd_report(args, config) -> None:
         _print_json(rows)
 
 
+def cmd_dashboard(args, config) -> None:
+    """输出一个人类可读的综合仪表盘，汇总核心指标。"""
+    employees = _load_data(args.data)
+    report = AnalysisEngine(config).run(employees)
+
+    org = report.org
+    risk = report.risk
+    high_risk = [r for r in risk if r["level"] == "high"]
+
+    line = "=" * 46
+    print(line)
+    print("员工信息智能分析 · 综合仪表盘")
+    print(line)
+    print(f"总人数：{org['total_headcount']}    部门数：{org['department_count']}")
+    print(f"高风险离职：{len(high_risk)} 人")
+    for r in high_risk[:5]:
+        print(f"  · {r['name']}（{r['employee_id']}）风险分 {r['score']}")
+    print()
+    print("部门平均风险（降序）：")
+    for metric in report.benchmark:
+        print(f"  {metric['department']:<12} 人数 {metric['headcount']:<4} 平均风险 {metric['avg_risk']}")
+    print()
+    print("梯队分布：", report.demographics.get("rating_distribution", {}))
+
+
 def main(argv: List[str] | None = None) -> None:
     config = load_config()
     parser = argparse.ArgumentParser(prog="employee-insight", description="员工信息智能分析与管理系统")
@@ -140,6 +166,8 @@ def main(argv: List[str] | None = None) -> None:
     report = sub.add_parser("report", help="导出报告")
     report.add_argument("--format", choices=["json", "csv", "markdown", "html"], default="json")
     report.set_defaults(func=cmd_report)
+
+    sub.add_parser("dashboard", help="综合仪表盘").set_defaults(func=cmd_dashboard)
 
     args = parser.parse_args(argv)
     args.func(args, config)
